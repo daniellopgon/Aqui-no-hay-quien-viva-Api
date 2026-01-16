@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">Aqui-no-hay-quien-viva-api</string>
+
+    <!-- Error messages -->
+    <string name="title_error_connection">Sin conexión</string>
+    <string name="description_error_connection">Comprueba tu conexión a internet e inténtalo de nuevo.</string>
+
+    <string name="title_error_server">Error del servidor</string>
+    <string name="description_error_server">Ha ocurrido un error. Por favor, inténtalo más tarde.</string>
+
+    <string name="title_error_unknown">Error desconocido</string>
+    <string name="description_error_unknown">Ha ocurrido un error inesperado.</string>
+
+    <string name="retry">Reintentar</string>
+    <string name="error_icon">Icono de error</string>
+
+    <!-- Character list -->
+    <string name="character_avatar">Avatar del personaje</string>
+    <string name="no_characters_found">No se encontraron personajes</string>
+    <string name="empty_list">Lista vacía</string>
+
+    <!-- Character detail -->
+    <string name="label_nickname">Apodo</string>
+    <string name="label_shortname">Nombre corto</string>
+    <string name="label_surname">Apellidos</string>
 </resources>
