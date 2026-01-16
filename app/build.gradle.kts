@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.navigation.safeargs)
 }
 
 android {
@@ -35,6 +38,12 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        viewBinding = true
+    }
+    sourceSets.getByName("main") {
+        java.srcDir("build/generated/ksp/main/kotlin")
+    }
 }
 
 dependencies {
@@ -43,6 +52,20 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.annotations)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.runtime)
+    implementation(libs.androidx.fragment)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.coil)
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
+    ksp(libs.koin.ksp.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
