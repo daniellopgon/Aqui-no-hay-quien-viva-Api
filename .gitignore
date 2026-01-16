@@ -14,3 +14,7 @@
 .cxx
 local.properties
 /.idea/
+/app/agent/
+/.kotlin/
+/.vscode/
+/app/src/main/java/edu/iesam/aqui_no_hay_quien_viva_api/agent/

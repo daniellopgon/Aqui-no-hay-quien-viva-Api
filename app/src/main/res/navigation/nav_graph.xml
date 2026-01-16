@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/characterListFragment">
+
+    <!-- Character List -->
+    <fragment
+        android:id="@+id/characterListFragment"
+        android:name="edu.iesam.aqui_no_hay_quien_viva_api.features.character.presentation.CharacterListFragment"
+        android:label="Personajes"
+        tools:layout="@layout/fragment_character_list">
+
+        <action
+            android:id="@+id/action_characterListFragment_to_characterDetailFragment"
+            app:destination="@id/characterDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <!-- Character Detail -->
+    <fragment
+        android:id="@+id/characterDetailFragment"
+        android:name="edu.iesam.aqui_no_hay_quien_viva_api.features.character.presentation.CharacterDetailFragment"
+        android:label="Detalle"
+        tools:layout="@layout/fragment_character_detail">
+
+        <argument
+            android:name="characterId"
+            app:argType="string" />
+
+    </fragment>
+
+</navigation>

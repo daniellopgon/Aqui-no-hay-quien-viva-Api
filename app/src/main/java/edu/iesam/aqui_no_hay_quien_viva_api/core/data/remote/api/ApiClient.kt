@@ -4,16 +4,10 @@ import org.koin.core.annotation.Single
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-/**
- * Singleton that provides configured Retrofit instance.
- * Base URL points to the ANHQV API.
- */
-@Single
-class ApiClient {
-    private val BASE_URL = "http://api.anhqv-stats.es/api/"
+class ApiClient(private val baseUrl: String) {
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
+        .baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
