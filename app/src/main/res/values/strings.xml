@@ -23,4 +23,5 @@
     <string name="label_nickname">Apodo</string>
     <string name="label_shortname">Nombre corto</string>
     <string name="label_surname">Apellidos</string>
+    <string name="search_hint">Buscar personaje…</string>
 </resources>
