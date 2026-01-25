@@ -13,14 +13,20 @@ import edu.iesam.aqui_no_hay_quien_viva_api.features.character.domain.Character
 
 
 class CharacterAdapter(
-    private val onItemClick: (Character) -> Unit
-) : ListAdapter<Character, CharacterAdapter.CharacterViewHolder>(CharacterDiffCallback()) {
+    private val onItemClick: (Character) -> Unit,
+    private val onFavoriteClick: (Character) -> Unit
+) : ListAdapter<CharacterWithFavorite, CharacterAdapter.CharacterViewHolder>(CharacterDiffCallback()) {
 
     class CharacterViewHolder(
         private val binding: ViewCharacterItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(character: Character, onItemClick: (Character) -> Unit) {
+        fun bind(
+            item: CharacterWithFavorite,
+            onItemClick: (Character) -> Unit,
+            onFavoriteClick: (Character) -> Unit
+        ) {
+            val character = item.character
             binding.characterName.text = character.shortname.ifEmpty { character.name }
             binding.characterDescription.text = buildFullName(character)
 
@@ -30,6 +36,11 @@ class CharacterAdapter(
                 error(R.drawable.img_unknown_error)
                 transformations(CircleCropTransformation())
             }
+
+            binding.btnFavorite.setIconResource(
+                if (item.isFavorite) R.drawable.ic_heart_filled else R.drawable.ic_heart_outline
+            )
+            binding.btnFavorite.setOnClickListener { onFavoriteClick(character) }
 
             binding.root.setOnClickListener { onItemClick(character) }
         }
@@ -51,15 +62,15 @@ class CharacterAdapter(
     }
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
-        holder.bind(getItem(position), onItemClick)
+        holder.bind(getItem(position), onItemClick, onFavoriteClick)
     }
 
-    private class CharacterDiffCallback : DiffUtil.ItemCallback<Character>() {
-        override fun areItemsTheSame(oldItem: Character, newItem: Character): Boolean {
-            return oldItem.id == newItem.id
+    private class CharacterDiffCallback : DiffUtil.ItemCallback<CharacterWithFavorite>() {
+        override fun areItemsTheSame(oldItem: CharacterWithFavorite, newItem: CharacterWithFavorite): Boolean {
+            return oldItem.character.id == newItem.character.id
         }
 
-        override fun areContentsTheSame(oldItem: Character, newItem: Character): Boolean {
+        override fun areContentsTheSame(oldItem: CharacterWithFavorite, newItem: CharacterWithFavorite): Boolean {
             return oldItem == newItem
         }
     }

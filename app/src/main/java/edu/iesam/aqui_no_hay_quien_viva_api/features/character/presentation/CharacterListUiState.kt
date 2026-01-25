@@ -6,12 +6,13 @@ import edu.iesam.aqui_no_hay_quien_viva_api.features.character.domain.Character
 
 data class CharacterListUiState(
     val isLoading: Boolean = false,
-    val characters: List<Character> = emptyList(),
-    val error: ErrorApp? = null
+    val characters: List<CharacterWithFavorite>? = null,
+    val error: ErrorApp? = null,
+    val showOnlyFavorites: Boolean = false
 ) {
     val showContent: Boolean
-        get() = !isLoading && error == null && characters.isNotEmpty()
+        get() = !isLoading && error == null && characters?.isNotEmpty() == true
 
     val showEmpty: Boolean
-        get() = !isLoading && error == null && characters.isEmpty()
+        get() = !isLoading && error == null && characters?.isEmpty() == true
 }
