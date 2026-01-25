@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import edu.iesam.aqui_no_hay_quien_viva_api.core.presentation.errors.ErrorAppFactory
 import edu.iesam.aqui_no_hay_quien_viva_api.databinding.FragmentCharacterListBinding
 import edu.iesam.aqui_no_hay_quien_viva_api.features.character.domain.Character
+import edu.iesam.aqui_no_hay_quien_viva_api.features.character.presentation.CharacterWithFavorite
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -27,11 +28,16 @@ class CharacterListFragment : Fragment() {
     private val viewModel: CharacterListViewModel by viewModel()
     private val errorFactory by lazy { ErrorAppFactory(requireContext()) }
 
-    private val adapter = CharacterAdapter { character ->
-        navigateToDetail(character.id)
-    }
+    private val adapter = CharacterAdapter(
+        onItemClick = { character ->
+            navigateToDetail(character.id)
+        },
+        onFavoriteClick = { character ->
+            viewModel.toggleFavorite(character)
+        }
+    )
 
-    private var allCharacters: List<Character> = emptyList()
+    private var allCharacters: List<CharacterWithFavorite> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,14 +50,22 @@ class CharacterListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    updateUI(state)
+                }
+            }
+        }
         setupRecyclerView()
         setupSearchView()
+        setUpFilterChip()
         setUpBackPressHandler()
-        observeUiState()
     }
 
     private fun setupRecyclerView() {
-        binding.characterList.adapter = adapter
+        binding.recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+        binding.recycler.adapter = adapter
     }
 
     private fun setupSearchView() {
@@ -70,59 +84,79 @@ class CharacterListFragment : Fragment() {
         }
     }
 
+    private fun setUpFilterChip() {
+        binding.chipFavorites.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.setFavoritesFilter(isChecked)
+        }
+    }
+
     private fun setUpBackPressHandler() {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (binding.searchView.isShowing) {
-                    binding.searchView.hide()
-                } else {
-                    isEnabled = false
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
-                    isEnabled = true
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (binding.searchView.isShowing) {
+                        binding.searchView.hide()
+                    } else {
+                        isEnabled = false
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                        isEnabled = true
+                    }
                 }
             }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        )
     }
 
     private fun filterList(query: String) {
-        val filtered = if (query.isBlank()) {
+        val filteredList = if (query.isEmpty()) {
             allCharacters
         } else {
             allCharacters.filter {
-                it.name.contains(query, ignoreCase = true) ||
-                        it.nickname.contains(query, ignoreCase = true)
+                it.character.name.contains(query, ignoreCase = true) ||
+                        it.character.nickname.contains(query, ignoreCase = true)
             }
         }
-        adapter.submitList(filtered)
-    }
-
-    private fun observeUiState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    updateUI(state)
-                }
-            }
-        }
+        adapter.submitList(filteredList)
     }
 
     private fun updateUI(state: CharacterListUiState) {
-        binding.loadingIndicator.isVisible = state.isLoading
-        binding.characterList.isVisible = state.showContent
-        binding.emptyStateView.isVisible = state.showEmpty
-        binding.errorView.isVisible = state.error != null
-
-        if (state.showContent) {
-            allCharacters = state.characters
-            adapter.submitList(allCharacters)
+        binding.progressBar.isVisible = state.isLoading
+        
+        state.error?.let { error ->
+            binding.errorView.visibility = View.VISIBLE
+            binding.errorView.render(errorFactory.build(error) {
+                viewModel.retry()
+            })
+            binding.recycler.visibility = View.GONE
+            binding.emptyStateView.visibility = View.GONE
+        } ?: run {
+            binding.errorView.visibility = View.GONE
         }
 
-        state.error?.let { error ->
-            val errorUI = errorFactory.build(error) {
-                viewModel.retry()
+        if (state.showContent) {
+            binding.recycler.visibility = View.VISIBLE
+            binding.emptyStateView.visibility = View.GONE
+            
+            // Keep reference to full list
+            allCharacters = state.characters ?: emptyList()
+
+            // Apply existing filter if any
+            val query = binding.searchView.text.toString()
+            if (query.isNotEmpty()) {
+                filterList(query)
+            } else {
+                adapter.submitList(allCharacters)
             }
-            binding.errorView.render(errorUI)
+            
+            // Sync chip (avoid triggering listener loop if possible, or just set)
+             if (binding.chipFavorites.isChecked != state.showOnlyFavorites) {
+                 binding.chipFavorites.isChecked = state.showOnlyFavorites
+             }
+        }
+
+        if (state.showEmpty) {
+            binding.recycler.visibility = View.GONE
+            binding.emptyStateView.visibility = View.VISIBLE
         }
     }
 

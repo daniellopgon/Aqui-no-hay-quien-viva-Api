@@ -13,5 +13,6 @@ data class Character(
     val nickname: String,
     val imageUrl: String,
     val imageAlt: String,
-    val slug: String
+    val slug: String,
+    val isFavorite: Boolean = false
 )

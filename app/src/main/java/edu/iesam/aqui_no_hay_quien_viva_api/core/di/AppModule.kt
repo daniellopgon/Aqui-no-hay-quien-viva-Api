@@ -3,6 +3,7 @@ package edu.iesam.aqui_no_hay_quien_viva_api.core.di
 import android.content.Context
 import edu.iesam.aqui_no_hay_quien_viva_api.core.data.local.xml.XmlCacheStorage
 import edu.iesam.aqui_no_hay_quien_viva_api.features.character.data.local.xml.CharacterXmlModel
+import edu.iesam.aqui_no_hay_quien_viva_api.features.character.data.local.xml.FavoriteXmlModel
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
@@ -25,5 +26,15 @@ class AppModule {
     @Single
     fun provideApiClient(): ApiClient {
         return ApiClient("http://api.anhqv-stats.es/api/")
+    }
+
+    @Single
+    @org.koin.core.annotation.Named("favorites")
+    fun provideFavoritesXmlCacheStorage(context: Context): XmlCacheStorage<FavoriteXmlModel> {
+        return XmlCacheStorage(
+            context = context,
+            nameXml = "favorites_cache",
+            dataSerializer = FavoriteXmlModel.serializer()
+        )
     }
 }
