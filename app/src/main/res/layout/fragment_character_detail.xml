@@ -11,169 +11,213 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="16dp">
 
-            <!-- Avatar circular con elevación -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="180dp"
-                android:layout_height="180dp"
-                app:cardCornerRadius="90dp"
-                app:cardElevation="12dp"
-                app:strokeColor="@android:color/white"
-                app:strokeWidth="4dp">
-
-                <ImageView
-                    android:id="@+id/characterAvatar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@string/character_avatar"
-                    android:scaleType="centerCrop"
-                    tools:src="@mipmap/ic_launcher" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Nombre del personaje -->
-            <TextView
-                android:id="@+id/characterName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:gravity="center"
-                android:textAppearance="?attr/textAppearanceHeadlineMedium"
-                android:textColor="?attr/colorPrimary"
-                android:textStyle="bold"
-                tools:text="Marisa" />
-
-            <!-- Nombre completo -->
-            <TextView
-                android:id="@+id/characterFullName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:gravity="center"
-                android:textAppearance="?attr/textAppearanceBodyLarge"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                tools:text="María Luisa Benito Valbuena" />
-
-            <!-- Card de información -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="8dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="1dp"
+                app:cardBackgroundColor="@color/md_theme_surfaceContainerLowest">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:paddingTop="24dp"
+                    android:orientation="vertical">
 
-                    <!-- Apodo -->
-                    <TextView
-                        android:id="@+id/labelNickname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_nickname"
-                        android:textAppearance="?attr/textAppearanceLabelMedium"
-                        android:textColor="?attr/colorPrimary" />
-
-                    <TextView
-                        android:id="@+id/characterNickname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorOnSurface"
-                        tools:text="Marisa" />
-
-                    <!-- Divider -->
-                    <View
+                    <!-- Header with 3D Avatar and Title -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="12dp"
-                        android:background="?attr/colorOutlineVariant" />
-
-                    <!-- Nombre corto -->
-                    <TextView
-                        android:id="@+id/labelShortname"
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_shortname"
-                        android:textAppearance="?attr/textAppearanceLabelMedium"
-                        android:textColor="?attr/colorPrimary" />
+                        android:paddingHorizontal="16dp"
+                        android:paddingBottom="16dp">
 
-                    <TextView
-                        android:id="@+id/characterShortname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorOnSurface"
-                        tools:text="Marisa" />
+                        <!-- Avatar container for 3D overflow effect -->
+                        <FrameLayout
+                            android:id="@+id/avatarContainer"
+                            android:layout_width="90dp"
+                            android:layout_height="90dp"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent">
 
-                    <!-- Divider -->
-                    <View
+                            <!-- Shadow circle -->
+                            <View
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:layout_gravity="center"
+                                android:translationX="2dp"
+                                android:translationY="2dp"
+                                android:background="@drawable/circle_shadow_background" />
+
+                            <!-- Yellow background circle -->
+                            <View
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/circle_yellow_background" />
+
+                            <!-- Character Image -->
+                            <ImageView
+                                android:id="@+id/headerAvatar"
+                                android:layout_width="90dp"
+                                android:layout_height="90dp"
+                                android:layout_gravity="center"
+                                android:scaleType="fitCenter"
+                                android:contentDescription="@string/character_avatar"
+                                tools:src="@tools:sample/avatars"/>
+                        </FrameLayout>
+
+                        <TextView
+                            android:id="@+id/characterName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toEndOf="@id/avatarContainer"
+                            app:layout_constraintTop_toTopOf="@id/avatarContainer"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/headerSubtitle"
+                            app:layout_constraintVertical_chainStyle="packed"
+                            tools:text="Homer Simpson" />
+
+                        <TextView
+                            android:id="@+id/headerSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/character_detail_details_title"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            app:layout_constraintStart_toStartOf="@id/characterName"
+                            app:layout_constraintTop_toBottomOf="@id/characterName"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@id/avatarContainer"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Large Image -->
+                    <ImageView
+                        android:id="@+id/characterImage"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="12dp"
-                        android:background="?attr/colorOutlineVariant" />
+                        android:layout_height="250dp"
+                        android:layout_marginTop="8dp"
+                        android:scaleType="fitCenter"
+                        android:background="?attr/colorSurfaceContainerHigh"
+                        android:contentDescription="@string/character_detail_image"
+                        tools:src="@tools:sample/backgrounds/scenic"/>
 
-                    <!-- Apellidos -->
-                    <TextView
-                        android:id="@+id/labelSurname"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_surname"
-                        android:textAppearance="?attr/textAppearanceLabelMedium"
-                        android:textColor="?attr/colorPrimary" />
+                        android:orientation="vertical"
+                        android:padding="24dp">
 
-                    <TextView
-                        android:id="@+id/characterSurname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorOnSurface"
-                        tools:text="Benito Valbuena" />
+                        <!-- Chips for Attributes -->
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chipGroup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="24dp"
+                            app:singleLine="false">
+                            <!-- Chips added dynamically -->
+                        </com.google.android.material.chip.ChipGroup>
 
+                        <!-- Full Name Section -->
+                        <TextView
+                            android:id="@+id/fullNameLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/character_detail_description_title"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="?attr/colorOnSurface"
+                            android:layout_marginBottom="8dp"/>
+
+                        <TextView
+                            android:id="@+id/characterFullName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:layout_marginBottom="24dp"
+                            tools:text="Juan Cuesta" />
+
+                        <!-- Nickname Section -->
+                        <TextView
+                            android:id="@+id/nicknameLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_nickname"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="?attr/colorOnSurface"
+                            android:layout_marginBottom="8dp"/>
+
+                        <TextView
+                            android:id="@+id/characterNickname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textStyle="italic"
+                            android:lineSpacingMultiplier="1.3"
+                            tools:text="El presidente" />
+
+                        <!-- Back Button -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="32dp"
+                            android:gravity="end">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/buttonBack"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/back_button"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
     </ScrollView>
 
-    <!-- Loading indicator -->
     <ProgressBar
-        android:id="@+id/loadingIndicator"
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="visible" />
 
-    <!-- Error view -->
     <edu.iesam.aqui_no_hay_quien_viva_api.core.presentation.errors.ErrorAppView
         android:id="@+id/errorView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
