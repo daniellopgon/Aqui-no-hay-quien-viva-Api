@@ -24,4 +24,10 @@
     <string name="label_shortname">Nombre corto</string>
     <string name="label_surname">Apellidos</string>
     <string name="search_hint">Buscar personaje…</string>
+    <string name="favorites">Favoritos</string>
+    <string name="character_detail_details_title">Detalles</string>
+    <string name="character_detail_image">Imagen del personaje</string>
+    <string name="character_detail_description_title">Nombre Completo</string>
+    <string name="back_button">Volver</string>
+    <string name="go_to_detail">Ir al detalle</string>
 </resources>

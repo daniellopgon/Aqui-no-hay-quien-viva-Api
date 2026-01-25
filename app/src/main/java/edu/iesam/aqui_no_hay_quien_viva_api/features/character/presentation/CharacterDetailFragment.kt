@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -55,7 +56,7 @@ class CharacterDetailFragment : Fragment() {
     }
 
     private fun updateUI(state: CharacterDetailUiState) {
-        binding.loadingIndicator.isVisible = state is CharacterDetailUiState.Loading
+        binding.progressBar.isVisible = state is CharacterDetailUiState.Loading
         binding.detailContent.isVisible = state is CharacterDetailUiState.Success
         binding.errorView.isVisible = state is CharacterDetailUiState.Error
 
@@ -77,18 +78,49 @@ class CharacterDetailFragment : Fragment() {
 
     private fun renderCharacter(character: Character) {
         binding.apply {
-            characterAvatar.load(character.imageUrl) {
+            characterName.text = character.name
+            
+            headerSubtitle.setText(edu.iesam.aqui_no_hay_quien_viva_api.R.string.character_detail_details_title)
+
+            headerAvatar.load(character.imageUrl) {
                 crossfade(true)
                 transformations(CircleCropTransformation())
+                placeholder(edu.iesam.aqui_no_hay_quien_viva_api.R.drawable.img_unknown_error)
+                error(edu.iesam.aqui_no_hay_quien_viva_api.R.drawable.img_unknown_error)
             }
 
-            characterName.text = character.shortname.ifEmpty { character.name }
+            characterImage.load(character.imageUrl) {
+                 crossfade(true)
+            }
+            chipGroup.removeAllViews()
+            if (character.shortname.isNotBlank()) {
+                addChip(character.shortname)
+            }
+
             characterFullName.text = buildFullName(character)
 
-            characterNickname.text = character.nickname.ifEmpty { "-" }
-            characterShortname.text = character.shortname.ifEmpty { "-" }
-            characterSurname.text = buildSurname(character)
+            if (character.nickname.isNotBlank()) {
+                nicknameLabel.isVisible = true
+                characterNickname.isVisible = true
+                characterNickname.text = character.nickname
+            } else {
+                nicknameLabel.isVisible = false
+                characterNickname.isVisible = false
+            }
+            
+            buttonBack.setOnClickListener {
+                findNavController().navigateUp()
+            }
         }
+    }
+
+    private fun addChip(text: String) {
+        if (text.isBlank()) return
+        val chip = com.google.android.material.chip.Chip(requireContext()).apply {
+            this.text = text
+            isCheckable = false
+        }
+        binding.chipGroup.addView(chip)
     }
 
     private fun buildFullName(character: Character): String {
@@ -97,12 +129,7 @@ class CharacterDetailFragment : Fragment() {
             .joinToString(" ")
     }
 
-    private fun buildSurname(character: Character): String {
-        return listOf(character.surname, character.secondSurname)
-            .filter { it.isNotBlank() }
-            .joinToString(" ")
-            .ifEmpty { "-" }
-    }
+    // Removed buildSurname as it is not used directly anymore
 
     override fun onDestroyView() {
         super.onDestroyView()
